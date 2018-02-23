@@ -22,8 +22,6 @@ public class Change {
 		remainder = remainder - (dimes*10);
 		int nickels = (remainder - (remainder%5))/5;  
 		      
-		//write your code here
-        
 		return (dimes + nickels + pennies);
     
 	}
