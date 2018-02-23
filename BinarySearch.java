@@ -23,9 +23,6 @@ public class BinarySearch {
 		int left = 0, right = a.length - 1;
      
    
-		//write your code here
-
- 
 		while ( left <= right ) {      
 			int mid = (left + right) /2;
 			if( a[mid] == x ) {
@@ -38,7 +35,6 @@ public class BinarySearch {
 				// check to the left
 				right = mid -1;
 			}
-		//System.out.println(x + ", " + left + ", " + mid + ", " + right);
 		}
 		return -1;
 	}
