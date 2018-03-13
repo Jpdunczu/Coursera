@@ -1,0 +1,156 @@
+*/
+Problem Description
+Task. The goal in this code problem is to check whether an input sequence contains a majority element.
+Input Format. The first line contains an integer 𝑛, the next one contains a sequence of 𝑛 non-negative
+integers 𝑎0, 𝑎1, . . . , 𝑎𝑛−1.
+Constraints. 1 ≤ 𝑛 ≤ 10^5; 0 ≤ 𝑎𝑖 ≤ 10^9 for all 0 ≤ 𝑖 < 𝑛.
+*/
+
+import java.util.*;
+import java.io.*;
+
+public class MajorityElement {
+    
+    private static int[] arr;
+    
+    private static int getMajorityElement(int[] a, int left, int right) {
+        switch (right) {
+            case 1:
+                return -1;
+            case 2:
+                if( a[0] == a[1] ) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            case 3:
+                if( a[0] == a[1] || a[1] == a[2] || a[2] == a[0] ) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            default:
+                break;
+        }
+        
+        arr = a;
+        Mergesort(arr);
+        
+        int mid = right/2;
+        int value = 0;
+        int count = 0;
+        value = arr[0];
+        for( int i = 0; i < arr.length; i++ ) {
+            if( value == arr[i] ) {
+                ++count;
+                if ( count > mid ) {
+                    return 1;
+                }
+            } else {
+                if ( count > mid ) {
+                    return 1;
+                }
+                value = arr[i];
+                count = 1;
+            }
+        }
+        return -1;
+    }
+    
+    private static void Mergesort(int[] a) {
+        
+        int mid = (a.length)/2;
+        if ( a.length > 1 ) {
+            int[] subArr1 = new int[mid];
+            int[] subArr2 = new int[a.length - mid];
+            for( int i = 0; i < mid; i++ ) {
+                subArr1[i] = a[i];
+            }
+            int k = 0;
+            for( int j = mid; j < a.length; j++ ) {
+                subArr2[k] = a[j];
+                k++;
+            }
+            
+            Mergesort(subArr1);
+            Mergesort(subArr2);
+            
+            Merge(subArr1, subArr2, a);
+        }
+    }
+    
+    private static void Merge(int[] aB, int[] aC, int[] aA) {
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        
+        while( i < aB.length && j < aC.length ) {
+            if( aB[i] <= aC[j] ) {
+                aA[k] = aB[i];
+                i++;
+            } else {
+                aA[k] = aC[j];
+                j++;
+            }
+            k++;
+        }
+        
+        if( i == aB.length ) {
+            for(; j < aC.length; j++ ) {
+                aA[k] = aC[j];
+                k++;
+            }
+        } else {
+            for(; i < aB.length; i++ ) {
+                aA[k] = aB[i];
+                k++;
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+      FastScanner scanner = new FastScanner(System.in);
+      int n = scanner.nextInt();
+      int[] a = new int[n];
+      for (int i = 0; i < n; i++) {
+        a[i] = scanner.nextInt();
+      }
+      
+      if (getMajorityElement(a, 0, a.length) != -1) {
+        System.out.println(1);
+      } else {
+        System.out.println(0);
+      }
+  }
+  
+  static class FastScanner {
+        BufferedReader br;
+        StringTokenizer st;
+        
+        FastScanner(InputStream stream) {
+            try {
+                br = new BufferedReader(new InputStreamReader(stream));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        String next() {
+            while (st == null || !st.hasMoreTokens()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            return st.nextToken();
+        }
+        
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+    }
+}
+
+
