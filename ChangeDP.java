@@ -1,5 +1,10 @@
 import java.util.Scanner;
-
+/*
+	Problem Description
+Input Format. Integer money.
+Output Format. The minimum number of coins with denominations 1, 3, 4 that changes money.
+Constraints. 1 ≤ money ≤ 10^3.
+*/
 
 
 public class ChangeDP {
