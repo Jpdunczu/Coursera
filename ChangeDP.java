@@ -6,26 +6,17 @@ Output Format. The minimum number of coins with denominations 1, 3, 4 that chang
 Constraints. 1 ≤ money ≤ 10^3.
 */
 
+// (Max time used: 0.48/1.50, max memory used: 26370048/536870912.)
 
 public class ChangeDP {
     
-
 	private static int getChange(int m) {
    
-		/*
-		if( m%4 == 0 ) {
-			return m/4;
-		} else if ( m%3 == 0 ) {
-			return m/3;
-		}
-		*/
-		// else
 		int size = m+1;
 		int[] coins = new int[size];  
 		coins[0] = 0;
 
-		//write your code here
-   
+		// calculate the possible combinations to reach the i'th number and choose the lowest possible to reach the amount m.
      		for( int i = 1; i < size; i++ ) {
 			
 			if ( i%4 == 0 ) {
