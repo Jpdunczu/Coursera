@@ -1,0 +1,85 @@
+/*
+Problem Description
+Task. Given an integer 𝑛, compute the minimum number of operations needed to obtain the number 𝑛 starting from the number 1.
+Input Format. The input consists of a single integer 1 ≤ 𝑛 ≤ 106.
+Output Format. In the  rst line, output the minimum number 𝑘 of operations needed to get 𝑛 from 1. In the second line output a sequence of intermediate numbers. That is, the second line should contain positiveintegers𝑎0,𝑎2,...,𝑎𝑘−1 suchthat𝑎0 =1,𝑎𝑘−1 =𝑛andforall0≤𝑖<𝑘−1,𝑎𝑖+1 isequalto either 𝑎𝑖 + 1, 2𝑎𝑖, or 3𝑎𝑖. If there are many such sequences, output any one of them.
+
+A Greedy Algorithm will not find the optimal solution.
+*/
+
+import java.util.*;
+
+public class PrimitiveCalculator {
+
+    private static List<Integer> optimal_sequence(int n) {
+        List<Integer> sequence = new ArrayList<Integer>();
+        int[] arr = new int[n+1]; // Array to hold the amount of operations for each i'th number up to n
+        int minOps = 0; // used to count the minimum # of operations 
+        
+        // first build the table of operation counts
+        for( int i = 1; i < n+1; i++ ) {
+            // run checks on the i'th number and compare how many operations it took to reach it. Store the lowest one.
+            if( i%3 == 0 ) {    
+                if( arr[i] == 0 || arr[i] > arr[i/3]+1 ) {
+                    arr[i] = arr[i/3]+1;
+                }
+            }
+            if( i%2 == 0 ) {
+                if( arr[i] == 0 || arr[i] > arr[i/2]+1 ) {
+                    arr[i] = arr[i/2]+1;
+                }
+            }
+            if( arr[i] == 0 || arr[i-1]+1 < arr[i]) {
+                arr[i] = arr[i-1]+1;
+            }
+        }
+        
+        minOps = arr[n];    // minOps == to the number of ops it took to get to our number n
+        sequence.add(n);   // add n to the list
+        int choice = 0;    // current choice of either 3, 2 or 1
+        
+        while ( n > 1 ) {
+            choice = 0;
+                if( n%3 == 0 ) {
+                    if( arr[n/3] < minOps ) {
+                        minOps = arr[n/3];
+                        choice = 3;
+                    }
+                }
+                if( n%2 == 0 ) {
+                    if( arr[n/2] < minOps ) {
+                        minOps = arr[n/2];
+                        choice = 2;
+                    }
+                }
+                if( arr[n-1] < minOps || choice == 0 ) {
+                    choice = 1;
+                    minOps = arr[n];
+                }
+            
+            
+            if( choice > 1 ) {
+                sequence.add(n/choice);
+                n /= choice;
+            } else {
+                sequence.add(n-choice);
+                n-=choice;
+            }
+        }
+        
+        Collections.reverse(sequence);
+        return sequence;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        List<Integer> sequence = optimal_sequence(n);
+        System.out.println(sequence.size() - 1);
+        for (Integer x : sequence) {
+            System.out.print(x + " ");
+        }
+    }
+}
+
+// (Max time used: 0.41/2.25, max memory used: 31059968/536870912.)
