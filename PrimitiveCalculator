@@ -38,6 +38,8 @@ public class PrimitiveCalculator {
         sequence.add(n);   // add n to the list
         int choice = 0;    // current choice of either 3, 2 or 1
         
+        // go back through our array and now compare the number of operations at the n'th number
+        // to the next lowest given our choices of either /3 /2 or -1;
         while ( n > 1 ) {
             choice = 0;
                 if( n%3 == 0 ) {
@@ -56,8 +58,7 @@ public class PrimitiveCalculator {
                     choice = 1;
                     minOps = arr[n];
                 }
-            
-            
+            // determine which of our 3 choices was the optimal at the current step and decrement n accordingly.
             if( choice > 1 ) {
                 sequence.add(n/choice);
                 n /= choice;
