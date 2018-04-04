@@ -1,0 +1,136 @@
+/*
+  Problem Description
+Task. Given 𝑛 gold bars, find the maximum weight of gold that fits into a bag of capacity 𝑊.
+Input Format. The first line of the input contains the capacity 𝑊 of a knapsack and the number 𝑛 of bars
+of gold. The next line contains 𝑛 integers 𝑤0,𝑤1, . . . ,𝑤𝑛−1 defining the weights of the bars of gold.
+Constraints. 1 ≤ 𝑊 ≤ 104; 1 ≤ 𝑛 ≤ 300; 0 ≤ 𝑤0, . . . ,𝑤𝑛−1 ≤ 105.
+Output Format. Output the maximum weight of gold that fits into a knapsack of capacity 𝑊.
+
+*/
+
+import java.util.*;
+
+public class Knapsack {
+    
+
+	// Greedy Algorithm does not produce the optimalWeight/value ratio
+	static int optimalWeight(int W, int[] w) {
+        
+		//write you code here
+        
+		int result = 0;
+        
+		for (int i = 0; i < w.length; i++) {
+          
+			if (result + w[i] <= W) {
+            
+				result += w[i];
+          
+			}
+        
+		}
+        
+		return result;
+    
+	}
+
+    
+
+	// Dynamic Programming Algorithm
+	// (Max time used: 0.54/3.00, max memory used: 40042496/536870912.)
+  
+	static int getOptimalWeight(int maxWeight, int[] weightOfGold) {
+        
+		/*
+			create an array[maxWeight+1]
+			for each i'th weight in maxWeight, find how much gold can fit
+			time complexity will be == to O( maxWeight * the number of items )
+		*/     
+    
+		int result = 0; // max weight thus far.
+		int[][] knapsack = new int[weightOfGold.length +1][maxWeight +1];
+    
+		for( int i = 0; i < weightOfGold.length+1; i++ ) {
+			for( int j = 0; j < maxWeight+1; j++ ) {
+      
+				if( i == 0 ) {
+					knapsack[i][j] = 0;	// intialize the first row as 0;
+				} else {
+					// check if the i'th gold will fit in the knapsack
+					if( weightOfGold[i-1] <= j ) {
+
+						// check if the current gold by itself is the optimal solution.
+						if( weightOfGold[i-1] > knapsack[i][j] ) {
+							knapsack[i][j] = weightOfGold[i-1];
+						}
+
+						// check if the last gold to fit in the knapsack is better than the current gold.
+						if ( knapsack[i-1][j] > weightOfGold[i-1] ) { 
+							// check if this is the best solution
+							if( knapsack[i-1][j] > knapsack[i][j] ) {
+								knapsack[i][j] = knapsack[i-1][j];
+							}
+						} 
+
+						// check if this gold and the last gold will both fit in the knapsack
+						if( knapsack[i-1][j] + weightOfGold[i-1] <= j ) {
+							// check if the combo is the best option
+							if( knapsack[i-1][j] + weightOfGold[i-1] > knapsack[i][j] ) {
+								knapsack[i][j] = knapsack[i-1][j] + weightOfGold[i-1];
+							}
+						} 
+            
+            // check if the weight is still optimal after taking out the last gold and adding this one instead
+						if( knapsack[i-1][j-weightOfGold[i-1]] + weightOfGold[i-1] > knapsack[i][j] ) {
+							knapsack[i][j] = knapsack[i-1][j-weightOfGold[i-1]] + weightOfGold[i-1];
+						}
+
+						// check if the max weight thus far is less than the current max weight in the knapsack
+						if( result < knapsack[i][j] ) {
+							result = knapsack[i][j];
+						}
+
+					} else {
+						// if the i'th gold will not fit at the current weight, check if the past gold did
+						if( knapsack[i-1][j] > 0 ) {
+							// if it does then that is the best current choice.
+							knapsack[i][j] = knapsack[i-1][j];
+						} else {
+							knapsack[i][j] = 0;
+						}
+					}
+				}
+			}
+		}
+		  
+		return result;
+    
+	}
+
+   
+
+	public static void main(String[] args) {
+        
+		Scanner scanner = new Scanner(System.in);
+        
+		int W, n;
+        
+		W = scanner.nextInt();
+        
+		n = scanner.nextInt();
+        
+		int[] w = new int[n];
+        
+		for (int i = 0; i < n; i++) {
+            
+			w[i] = scanner.nextInt();
+        
+		}
+        
+
+		System.out.println(getOptimalWeight(W, w));
+    
+	}
+
+}
+
